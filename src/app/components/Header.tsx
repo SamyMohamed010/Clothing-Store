@@ -1,13 +1,16 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { ShoppingCart, Search, Menu, User, Heart } from 'lucide-react';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Input } from './ui/input';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 
 export const Header: React.FC = () => {
   const { getCartCount } = useCart();
+  const { user, isAdmin, logout } = useAuth();
+  const navigate = useNavigate();
   const cartCount = getCartCount();
 
   return (
@@ -59,16 +62,24 @@ export const Header: React.FC = () => {
             <Link to="/shop?category=jeans" className="hover:text-slate-600 transition-colors">
               جينز
             </Link>
-            <Link to="/admin" className="hover:text-blue-600 font-bold text-blue-800 transition-colors">
-              الإدارة
-            </Link>
+            {isAdmin && (
+              <Link to="/admin" className="hover:text-blue-600 font-bold text-blue-800 transition-colors">
+                الإدارة
+              </Link>
+            )}
           </nav>
 
           {/* Actions */}
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" className="hidden md:inline-flex">
-              <User className="h-5 w-5" />
-            </Button>
+            {user ? (
+              <Button variant="ghost" size="sm" onClick={() => logout()} className="text-red-500 hover:text-red-700 hover:bg-red-50 hidden md:inline-flex">
+                تسجيل الخروج
+              </Button>
+            ) : (
+              <Button variant="ghost" size="icon" onClick={() => navigate('/login')} className="hidden md:inline-flex">
+                <User className="h-5 w-5" />
+              </Button>
+            )}
             <Button variant="ghost" size="icon" className="hidden md:inline-flex">
               <Heart className="h-5 w-5" />
             </Button>

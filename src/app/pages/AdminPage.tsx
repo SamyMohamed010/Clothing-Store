@@ -11,9 +11,8 @@ export const AdminPage: React.FC = () => {
   const [isAdding, setIsAdding] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   
-  // Cloudinary Config State
-  const [cloudName, setCloudName] = useState(localStorage.getItem('cloudinary_cloud_name') || '');
-  const [uploadPreset, setUploadPreset] = useState(localStorage.getItem('cloudinary_upload_preset') || '');
+  const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+  const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
   const [isUploading, setIsUploading] = useState(false);
 
   // Form State
@@ -23,11 +22,7 @@ export const AdminPage: React.FC = () => {
     rating: 5, reviews: 0, inStock: true, sale: false, featured: false, newArrival: false
   });
 
-  const saveCloudinaryConfig = () => {
-    localStorage.setItem('cloudinary_cloud_name', cloudName);
-    localStorage.setItem('cloudinary_upload_preset', uploadPreset);
-    alert('تم حفظ إعدادات Cloudinary بنجاح!');
-  };
+
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -93,24 +88,7 @@ export const AdminPage: React.FC = () => {
         </Button>
       </div>
 
-      {/* Cloudinary Setup */}
-      <Card className="p-4 mb-8 bg-slate-50 border-blue-200 border">
-        <div className="flex items-center gap-2 mb-4">
-          <Settings className="text-blue-500" />
-          <h2 className="text-lg font-semibold text-blue-900">إعدادات رفع الصور (Cloudinary)</h2>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm mb-1">Cloud Name</label>
-            <input type="text" value={cloudName} onChange={e => setCloudName(e.target.value)} className="w-full border rounded p-2" placeholder="e.g. dxk123abc" />
-          </div>
-          <div>
-            <label className="block text-sm mb-1">Upload Preset (Unsigned)</label>
-            <input type="text" value={uploadPreset} onChange={e => setUploadPreset(e.target.value)} className="w-full border rounded p-2" placeholder="e.g. my_preset" />
-          </div>
-        </div>
-        <Button onClick={saveCloudinaryConfig} className="mt-4 bg-blue-600">حفظ الإعدادات</Button>
-      </Card>
+
 
       {/* Add / Edit Form */}
       {isAdding && (
